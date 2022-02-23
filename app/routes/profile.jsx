@@ -3,31 +3,24 @@ import { useEffect } from 'react';
 import {
   Form,
   Link,
-  LoaderFunction,
-  MetaFunction,
   useCatch,
   useLoaderData,
   useNavigate,
 } from 'remix';
 import authenticated from '~/policies/authenticated.server';
 
-import type { User } from '@supabase/supabase-js';
-
-export const meta: MetaFunction = () => {
+export const meta = () => {
   return { title: "Supabase x Remix | Profile" };
 };
 
-type LoaderData = {
-  user: User;
-};
-export const loader: LoaderFunction = async ({ request }) => {
-  return await authenticated<LoaderData>(request, ({ user }) => {
+export const loader = async ({ request }) => {
+  return await authenticated(request, ({ user }) => {
     return { user };
   });
 };
 
 const Profile = () => {
-  const { user } = useLoaderData<LoaderData>();
+  const { user } = useLoaderData();
 
   return (
     <div style={{ textAlign: "center" }}>

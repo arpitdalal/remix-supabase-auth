@@ -1,7 +1,3 @@
-import type {
-  ActionFunction,
-  LoaderFunction,
-} from 'remix';
 import { redirect } from 'remix';
 import { signOutUser } from '~/api/supabase-auth.server';
 import {
@@ -9,11 +5,11 @@ import {
   getSession,
 } from '~/services/supabase.server';
 
-export const loader: LoaderFunction = () => {
+export const loader = () => {
   return redirect("/");
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie"));
   if (!session) {
     return redirect("/login");

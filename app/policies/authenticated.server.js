@@ -10,12 +10,10 @@ import {
   getSession,
 } from '~/services/supabase.server';
 
-import type { User } from '@supabase/supabase-js';
-
-export default async function authenticated<T>(
-  request: Request,
-  callback: ({ user }: { user: User }) => T
-): Promise<T | Response> {
+export default async function authenticated(
+  request,
+  callback
+) {
   try {
     const url = new URL(request.url);
     const accessToken = url.searchParams.get("access_token");

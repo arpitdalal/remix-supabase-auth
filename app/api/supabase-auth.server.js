@@ -1,25 +1,16 @@
-import type { Session } from 'remix';
 import supabase, { getSession } from '~/services/supabase.server';
-import { Error } from '~/types';
 
-import type { User } from '@supabase/supabase-js';
-
-type AuthForm = {
-  email: string;
-  password: string;
-};
-
-export const setSBAuth = async (request: Request): Promise<void> => {
+export const setSBAuth = async (request) => {
   const session = await getSession(request.headers.get("Cookie"));
   const userAccessToken = session.get("access_token");
   supabase.auth.setAuth(userAccessToken);
 };
 
 export const setAuthSession = async (
-  request: Request,
-  accessToken: string,
-  refreshToken: string
-): Promise<Session> => {
+  request,
+  accessToken,
+  refreshToken
+) => {
   const session = await getSession(request.headers.get("Cookie"));
   session.set("access_token", accessToken);
   session.set("refresh_token", refreshToken);
@@ -27,7 +18,7 @@ export const setAuthSession = async (
   return session;
 };
 
-export const hasAuthSession = async (request: Request): Promise<boolean> => {
+export const hasAuthSession = async (request) => {
   try {
     const session = await getSession(request.headers.get("Cookie"));
     return session.has("access_token");
@@ -37,8 +28,8 @@ export const hasAuthSession = async (request: Request): Promise<boolean> => {
 };
 
 export const hasActiveAuthSession = async (
-  request: Request
-): Promise<boolean> => {
+  request
+)=> {
   try {
     if (!(await hasAuthSession(request))) return false;
 
@@ -55,8 +46,8 @@ export const hasActiveAuthSession = async (
 };
 
 export const refreshUserToken = async (
-  request: Request
-): Promise<LoginReturn> => {
+  request
+) => {
   try {
     const session = await getSession(request.headers.get("Cookie"));
 
@@ -77,14 +68,10 @@ export const refreshUserToken = async (
   }
 };
 
-type LoginReturn = {
-  accessToken?: string;
-  refreshToken?: string;
-} & Error;
 export const loginUser = async ({
   email,
   password,
-}: AuthForm): Promise<LoginReturn> => {
+}) => {
   try {
     const { data: sessionData, error: loginError } =
       await supabase.auth.api.signInWithEmail(email, password);
@@ -107,13 +94,10 @@ export const loginUser = async ({
   }
 };
 
-type RegisterReturn = {
-  user?: User;
-} & Error;
 export const registerUser = async ({
   email,
   password,
-}: AuthForm): Promise<RegisterReturn> => {
+}) => {
   try {
     const { user, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -132,12 +116,9 @@ export const registerUser = async ({
   }
 };
 
-type SignOutUserReturn = {
-  done: boolean;
-} & Error;
 export const signOutUser = async (
-  session: Session
-): Promise<SignOutUserReturn> => {
+  session
+) => {
   try {
     const { error } = await supabase.auth.api.signOut(
       session.get("access_token")
@@ -154,7 +135,7 @@ export const signOutUser = async (
   }
 };
 
-export const doesUserExistByEmail = async (email: string): Promise<boolean> => {
+export const doesUserExistByEmail = async (email) => {
   try {
     const { data: profile, error } = await supabase
       .from<User>("users")
@@ -170,12 +151,9 @@ export const doesUserExistByEmail = async (email: string): Promise<boolean> => {
   }
 };
 
-type GetUserReturn = {
-  user?: User;
-} & Error;
 export const getUserByAccessToken = async (
-  accessToken: string
-): Promise<GetUserReturn> => {
+  accessToken
+) => {
   try {
     const { user, error } = await supabase.auth.api.getUser(accessToken);
 

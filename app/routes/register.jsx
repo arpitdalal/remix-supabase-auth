@@ -1,8 +1,3 @@
-import type {
-  ActionFunction,
-  LoaderFunction,
-  MetaFunction,
-} from 'remix';
 import {
   Form,
   json,
@@ -18,25 +13,20 @@ import {
 } from '~/api/supabase-auth.server';
 import AuthProviderBtn from '~/components/AuthProviderBtn';
 
-export const meta: MetaFunction = () => {
+export const meta = () => {
   return { title: "Supabase x Remix | Register" };
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }) => {
   if (await hasActiveAuthSession(request)) {
     return redirect("/profile");
   }
   return {};
 };
 
-type ActionData = {
-  formError?: string;
-  result?: string;
-  fields?: { email: string };
-};
-export const action: ActionFunction = async ({
+export const action = async ({
   request,
-}): Promise<Response> => {
+}) => {
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password");
@@ -82,7 +72,7 @@ export const action: ActionFunction = async ({
 };
 
 const Register = () => {
-  const actionData = useActionData<ActionData>();
+  const actionData = useActionData();
   const [searchParams] = useSearchParams();
 
   return (

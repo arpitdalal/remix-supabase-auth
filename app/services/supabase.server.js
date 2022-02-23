@@ -1,6 +1,5 @@
 import { createCookieSessionStorage } from 'remix';
 
-import type { SupabaseClientOptions } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 
 import { name as appName } from '../../package.json';
@@ -13,7 +12,7 @@ if (!process.env.SUPABASE_ANON_KEY) {
   throw new Error("SUPABASE_ANON_KEY is required");
 }
 
-const supabaseOptions: SupabaseClientOptions = {
+const supabaseOptions = {
   schema: "public",
   persistSession: true,
   autoRefreshToken: true,

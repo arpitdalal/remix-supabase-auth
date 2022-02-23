@@ -1,22 +1,11 @@
 import { renderToString } from 'react-dom/server';
-import type { EntryContext } from 'remix';
 import { RemixServer } from 'remix';
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      SUPABASE_URL: string;
-      SUPABASE_ANON_KEY: string;
-      SESSION_SECRET: string;
-    }
-  }
-}
-
 export default function handleRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext
+  request,
+  responseStatusCode,
+  responseHeaders,
+  remixContext
 ) {
   const markup = renderToString(
     <RemixServer context={remixContext} url={request.url} />

@@ -2,9 +2,7 @@ import {
   Link,
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
-  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -12,7 +10,7 @@ import {
   useLoaderData,
 } from 'remix';
 
-export const meta: MetaFunction = () => {
+export const meta = () => {
   return {
     title: "Supabase x Remix",
     description:
@@ -20,13 +18,7 @@ export const meta: MetaFunction = () => {
   };
 };
 
-export type RootLoaderData = {
-  ENV: {
-    SUPABASE_URL: string;
-    SUPABASE_ANON_KEY: string;
-  };
-};
-export const loader: LoaderFunction = async (): Promise<RootLoaderData> => {
+export const loader = async () => {
   return {
     ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -35,7 +27,7 @@ export const loader: LoaderFunction = async (): Promise<RootLoaderData> => {
   };
 };
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }) => {
   return (
     <div style={{ padding: "0 20px" }}>
       <div
@@ -92,7 +84,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => {
-  const loaderData = useLoaderData<RootLoaderData>();
+  const loaderData = useLoaderData();
 
   return (
     <html lang="en">
@@ -161,7 +153,7 @@ export function CatchBoundary() {
   );
 }
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
+export const ErrorBoundary = ({ error }) => {
   return (
     <Layout>
       <div>

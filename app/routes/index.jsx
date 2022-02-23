@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 
 import {
-  MetaFunction,
   useNavigate,
 } from 'remix';
 
-export const meta: MetaFunction = () => {
+export const meta = () => {
   return { title: "Supabase x Remix | Home" };
 };
 
