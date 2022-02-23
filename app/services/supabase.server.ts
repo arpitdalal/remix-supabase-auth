@@ -1,0 +1,44 @@
+import { createCookieSessionStorage } from 'remix';
+
+import type { SupabaseClientOptions } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
+
+import { name as appName } from '../../package.json';
+
+if (!process.env.SUPABASE_URL) {
+  throw new Error("SUPABASE_URL is required");
+}
+
+if (!process.env.SUPABASE_ANON_KEY) {
+  throw new Error("SUPABASE_ANON_KEY is required");
+}
+
+const supabaseOptions: SupabaseClientOptions = {
+  schema: "public",
+  persistSession: true,
+  autoRefreshToken: true,
+  detectSessionInUrl: true,
+  headers: { "x-application-name": appName },
+};
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey, supabaseOptions);
+
+const { getSession, commitSession, destroySession } =
+  createCookieSessionStorage({
+    cookie: {
+      name: "sb:token",
+      expires: new Date(Date.now() + 3600),
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30,
+      path: "/",
+      sameSite: "lax",
+      secrets: ["aStrongSecret"],
+      secure: process.env.NODE_ENV === "production",
+    },
+  });
+
+export default supabase;
+export { commitSession, destroySession, getSession };
