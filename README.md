@@ -9,7 +9,7 @@ Bare minimum and un-opinionated example using Remix to implement Supabase's emai
 - Refresh token logic implemented
 - Can easily extend the social auth providers
 - Bare minimum and un-opinionated
-- `main` branch is Typescript but you can access JavaScript project in [`js` branch](https://github.com/arpitdalal/remix-supabase-auth/tree/js)
+- `js` branch is JavaScript but you can access Typescript project in [`main` branch](https://github.com/arpitdalal/remix-supabase-auth/)
 
 ## Quick Start
 
@@ -27,13 +27,13 @@ Bare minimum and un-opinionated example using Remix to implement Supabase's emai
 
 ## What you'll get?
 
-[Register](./app/routes/register.tsx) - Register using email/password or continue with Google/Facebook social authentications
+[Register](./app/routes/register.jsx) - Register using email/password or continue with Google/Facebook social authentications
 
-[Login](./app/routes/login.tsx) - Login using email/password or continue with Google/Facebook social authentications. When logging in using a Google/Facebook account that is not registered in Supabase, Supabase will create a new account with that email
+[Login](./app/routes/login.jsx) - Login using email/password or continue with Google/Facebook social authentications. When logging in using a Google/Facebook account that is not registered in Supabase, Supabase will create a new account with that email
 
-[Profile](./app/routes/profile.tsx) - Only accessible when logged in, otherwise throws an error which is caught by Remix's `CatchBoundary` and asks user to login. Once logged in, it'll show the `User` object that is returned from Supabase
+[Profile](./app/routes/profile.jsx) - Only accessible when logged in, otherwise throws an error which is caught by Remix's `CatchBoundary` and asks user to login. Once logged in, it'll show the `User` object that is returned from Supabase
 
-[Logout](./app/routes/api/logout.ts) - Logs user out of the local session and Supabase session. It is an api/resource route because it doesn't export a JSX element
+[Logout](./app/routes/api/logout.js) - Logs user out of the local session and Supabase session. It is an api/resource route because it doesn't export a JSX element
 
 ## Questions?
 
