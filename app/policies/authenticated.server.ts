@@ -40,7 +40,7 @@ export default async function authenticated<T>(
         throw new Response("Unauthorized", { status: 401 });
       }
       const session = await setAuthSession(request, accessToken, refreshToken);
-      return redirect("/app", {
+      return redirect("/profile", {
         headers: {
           "Set-Cookie": await commitSession(session),
         },
