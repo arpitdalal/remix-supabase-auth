@@ -9,24 +9,26 @@ import {
   Link,
   redirect,
   useActionData,
-  useSearchParams,
 } from 'remix';
-import {
-  doesUserExistByEmail,
-  hasActiveAuthSession,
-  registerUser,
-} from '~/api/supabase-auth.server';
+import { registerUser } from '~/api/supabase-auth.server';
 import AuthProviderBtn from '~/components/AuthProviderBtn';
+import authenticated from '~/policies/authenticated.server';
 
 export const meta: MetaFunction = () => {
   return { title: "Supabase x Remix | Register" };
 };
 
+type LoaderData = {};
 export const loader: LoaderFunction = async ({ request }) => {
-  if (await hasActiveAuthSession(request)) {
-    return redirect("/profile");
-  }
-  return {};
+  return authenticated(
+    request,
+    () => {
+      return redirect("/profile");
+    },
+    () => {
+      return json<LoaderData>({});
+    }
+  );
 };
 
 type ActionData = {
@@ -40,11 +42,9 @@ export const action: ActionFunction = async ({
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password");
-  const redirectTo = form.get("redirectTo") || "/";
   if (
     !email ||
     !password ||
-    typeof redirectTo !== "string" ||
     typeof email !== "string" ||
     typeof password !== "string" ||
     password.length < 8
@@ -56,14 +56,7 @@ export const action: ActionFunction = async ({
           email: String(email) ?? "",
         },
       },
-      400
-    );
-  }
-
-  if (await doesUserExistByEmail(email)) {
-    return json<ActionData>(
-      { formError: "Something went wrong", fields: { email } },
-      400
+      403
     );
   }
 
@@ -74,16 +67,15 @@ export const action: ActionFunction = async ({
   if (error || !user) {
     return json<ActionData>(
       { formError: error || "Something went wrong", fields: { email } },
-      400
+      401
     );
   }
 
   return json<ActionData>({ result: "success" }, { status: 201 });
 };
 
-const Register = () => {
+export default function Register() {
   const actionData = useActionData<ActionData>();
-  const [searchParams] = useSearchParams();
 
   return (
     <div>
@@ -96,11 +88,6 @@ const Register = () => {
       </div>
       <p>Or continue with email/password</p>
       <Form replace method="post">
-        <input
-          type="hidden"
-          name="redirectTo"
-          value={searchParams.get("redirectTo") ?? undefined}
-        />
         <fieldset>
           <legend>Register</legend>
           <div style={{ margin: 5 }}>
@@ -124,18 +111,18 @@ const Register = () => {
         </fieldset>
       </Form>
       <p>
-        Have an account? <Link to="/login">Login</Link> instead
+        Have an account?<Link to="/login">Login</Link> instead
       </p>
       {actionData?.formError ? (
         <p style={{ color: "red" }}>{actionData.formError}</p>
       ) : null}
       {actionData?.result ? (
         <p style={{ color: "green" }}>
-          We have sent you an email, please confirm to register.
+          We have sent you an email.
+          <br />
+          please confirm you email to complete registration.
         </p>
       ) : null}
     </div>
   );
-};
-
-export default Register;
+}

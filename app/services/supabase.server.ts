@@ -24,21 +24,21 @@ const supabaseOptions: SupabaseClientOptions = {
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey, supabaseOptions);
+export const supabaseAdmin = createClient(
+  supabaseUrl,
+  supabaseKey,
+  supabaseOptions
+);
 
-const { getSession, commitSession, destroySession } =
-  createCookieSessionStorage({
-    cookie: {
-      name: "sb:token",
-      expires: new Date(Date.now() + 3600),
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 30,
-      path: "/",
-      sameSite: "lax",
-      secrets: ["aStrongSecret"],
-      secure: process.env.NODE_ENV === "production",
-    },
-  });
-
-export default supabase;
-export { commitSession, destroySession, getSession };
+export const authCookie = createCookieSessionStorage({
+  cookie: {
+    name: "sb:token",
+    expires: new Date(Date.now() + 3600),
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 30,
+    path: "/",
+    sameSite: "lax",
+    secrets: ["aStrongSecret"],
+    secure: process.env.NODE_ENV === "production",
+  },
+});

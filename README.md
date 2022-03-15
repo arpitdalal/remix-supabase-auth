@@ -1,13 +1,14 @@
 # Remix Supabase Auth
 
-Bare minimum and un-opinionated example using Remix to implement Supabase's email/password and social auth
+Bare minimum and un-opinionated example using Remix to implement Supabase's email/password and oAuth
 
 ## Features
 
 - Signin and Register using Supabase's email/password, Google, and Facebook auth
+- Integration for all oAuth providers that Supabase supports
+- Easily enable any oAuth provider - see [extend section](https://github.com/arpitdalal/remix-supabase-auth#extend-implementation)
 - Persist user with HTTP cookie
 - Refresh token logic implemented
-- Can easily extend the social auth providers
 - Bare minimum and un-opinionated
 - `main` branch is Typescript but you can access JavaScript project in [`js` branch](https://github.com/arpitdalal/remix-supabase-auth/tree/js)
 
@@ -31,9 +32,20 @@ Bare minimum and un-opinionated example using Remix to implement Supabase's emai
 
 [Login](./app/routes/login.tsx) - Login using email/password or continue with Google/Facebook social authentications. When logging in using a Google/Facebook account that is not registered in Supabase, Supabase will create a new account with that email
 
+[Auth Callback](./app/routs/api/../../routes/api/auth.callback.tsx) - Handles the callback from Supabase when oAuth providers are used to login or register. This route uses `supabase.auth.onAuthStateChange` to get the access and refresh tokens from the url and then it submits the `FormData` to create session on the server
+
 [Profile](./app/routes/profile.tsx) - Only accessible when logged in, otherwise throws an error which is caught by Remix's `CatchBoundary` and asks user to login. Once logged in, it'll show the `User` object that is returned from Supabase
 
 [Logout](./app/routes/api/logout.ts) - Logs user out of the local session and Supabase session. It is an api/resource route because it doesn't export a JSX element
+
+## Extend Implementation
+
+<details>
+<summary>Add other oAuth providers</summary>
+
+- Simply add the `client ID` and `secret` to Supabase for the provider that you want to support.
+- In `login.tsx` and `register.tsx` add the `<AuthProviderBtn provider={YourProvider} redirectTo={redirectTo} />` and that's it!
+</details>
 
 ## Questions?
 

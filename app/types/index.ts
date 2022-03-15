@@ -6,6 +6,4 @@ export type TypedWindow = Window &
     };
   };
 
-export type Providers = "google" | "facebook";
-
 export type Error = { error?: string };

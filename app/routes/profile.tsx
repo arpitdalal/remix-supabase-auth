@@ -1,13 +1,11 @@
-import { useEffect } from 'react';
-
 import {
   Form,
+  json,
   Link,
   LoaderFunction,
   MetaFunction,
   useCatch,
   useLoaderData,
-  useNavigate,
 } from 'remix';
 import authenticated from '~/policies/authenticated.server';
 
@@ -21,12 +19,18 @@ type LoaderData = {
   user: User;
 };
 export const loader: LoaderFunction = async ({ request }) => {
-  return await authenticated<LoaderData>(request, ({ user }) => {
-    return { user };
-  });
+  return authenticated(
+    request,
+    (user) => {
+      return json<LoaderData>({ user });
+    },
+    () => {
+      throw new Response("Unauthorized", { status: 401 });
+    }
+  );
 };
 
-const Profile = () => {
+export default function Profile() {
   const { user } = useLoaderData<LoaderData>();
 
   return (
@@ -40,28 +44,10 @@ const Profile = () => {
       </Form>
     </div>
   );
-};
+}
 
-export default Profile;
-
-export const CatchBoundary = () => {
+export function CatchBoundary() {
   const caught = useCatch();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const modifiedUrl = document.location.href.replace("#", "?");
-    const url = new URL(modifiedUrl);
-    console.log("url", url);
-
-    if (
-      url.searchParams.get("access_token") &&
-      url.searchParams.get("refresh_token")
-    ) {
-      console.log("Modified url", modifiedUrl);
-      navigate(`/profile?${modifiedUrl.split("?")[1]}`);
-      location.reload();
-    }
-  }, []);
 
   if (caught.status === 401) {
     return (
@@ -75,4 +61,4 @@ export const CatchBoundary = () => {
   }
 
   throw new Error(`Unexpected caught response with status: ${caught.status}`);
-};
+}

@@ -15,6 +15,8 @@ const customWindow = window as TypedWindow;
 const supabaseUrl = customWindow.ENV.SUPABASE_URL;
 const supabaseKey = customWindow.ENV.SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey, supabaseOptions);
-
-export default supabase;
+export const supabaseClient = createClient(
+  supabaseUrl,
+  supabaseKey,
+  supabaseOptions
+);

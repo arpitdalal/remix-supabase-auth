@@ -1,20 +1,23 @@
-import supabase from '~/services/supabase.client';
-import type { Providers } from '~/types';
+import { supabaseClient } from '~/services/supabase.client';
+
+import type { Provider } from '@supabase/supabase-js';
 
 type ContinueWithProviderArgs = {
-  provider: Providers;
+  provider: Provider;
   redirectTo?: string;
 };
 export const continueWithProvider = async ({
   provider,
-  redirectTo = `${window.location.origin}/profile`,
+  redirectTo = "/profile",
 }: ContinueWithProviderArgs) => {
-  return await supabase.auth.signIn(
+  const redirectUrl = `${window.location.origin}/api/auth/callback?redirectTo=${redirectTo}`;
+
+  return await supabaseClient.auth.signIn(
     {
       provider,
     },
     {
-      redirectTo: redirectTo,
+      redirectTo: redirectUrl,
     }
   );
 };

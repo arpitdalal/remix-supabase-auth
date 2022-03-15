@@ -1,5 +1,5 @@
 import type { Session } from 'remix';
-import supabase, { getSession } from '~/services/supabase.server';
+import { supabaseAdmin } from '~/services/supabase.server';
 import { Error } from '~/types';
 
 import type { User } from '@supabase/supabase-js';
@@ -9,40 +9,34 @@ type AuthForm = {
   password: string;
 };
 
-export const setSBAuth = async (request: Request): Promise<void> => {
-  const session = await getSession(request.headers.get("Cookie"));
+export async function setSBAuth(session: Session): Promise<void> {
   const userAccessToken = session.get("access_token");
-  supabase.auth.setAuth(userAccessToken);
-};
+  supabaseAdmin.auth.setAuth(userAccessToken);
+}
 
-export const setAuthSession = async (
-  request: Request,
+export function setAuthSession(
+  session: Session,
   accessToken: string,
   refreshToken: string
-): Promise<Session> => {
-  const session = await getSession(request.headers.get("Cookie"));
+): Session {
   session.set("access_token", accessToken);
   session.set("refresh_token", refreshToken);
 
   return session;
-};
+}
 
-export const hasAuthSession = async (request: Request): Promise<boolean> => {
+export function hasAuthSession(session: Session): boolean {
   try {
-    const session = await getSession(request.headers.get("Cookie"));
     return session.has("access_token");
   } catch {
     return false;
   }
-};
+}
 
-export const hasActiveAuthSession = async (
-  request: Request
-): Promise<boolean> => {
+export async function hasActiveAuthSession(session: Session): Promise<boolean> {
   try {
-    if (!(await hasAuthSession(request))) return false;
+    if (!hasAuthSession(session)) return false;
 
-    const session = await getSession(request.headers.get("Cookie"));
     const { user, error } = await getUserByAccessToken(
       session.get("access_token")
     );
@@ -52,15 +46,11 @@ export const hasActiveAuthSession = async (
   } catch {
     return false;
   }
-};
+}
 
-export const refreshUserToken = async (
-  request: Request
-): Promise<LoginReturn> => {
+export async function refreshUserToken(session: Session): Promise<LoginReturn> {
   try {
-    const session = await getSession(request.headers.get("Cookie"));
-
-    const { data, error } = await supabase.auth.api.refreshAccessToken(
+    const { data, error } = await supabaseAdmin.auth.api.refreshAccessToken(
       session.get("refresh_token")
     );
 
@@ -75,19 +65,19 @@ export const refreshUserToken = async (
   } catch {
     return { error: "Something went wrong" };
   }
-};
+}
 
 type LoginReturn = {
   accessToken?: string;
   refreshToken?: string;
 } & Error;
-export const loginUser = async ({
+export async function loginUser({
   email,
   password,
-}: AuthForm): Promise<LoginReturn> => {
+}: AuthForm): Promise<LoginReturn> {
   try {
     const { data: sessionData, error: loginError } =
-      await supabase.auth.api.signInWithEmail(email, password);
+      await supabaseAdmin.auth.api.signInWithEmail(email, password);
 
     if (
       loginError ||
@@ -105,17 +95,17 @@ export const loginUser = async ({
   } catch {
     return { error: "Something went wrong" };
   }
-};
+}
 
 type RegisterReturn = {
   user?: User;
 } & Error;
-export const registerUser = async ({
+export async function registerUser({
   email,
   password,
-}: AuthForm): Promise<RegisterReturn> => {
+}: AuthForm): Promise<RegisterReturn> {
   try {
-    const { user, error: signUpError } = await supabase.auth.signUp({
+    const { user, error: signUpError } = await supabaseAdmin.auth.signUp({
       email,
       password,
     });
@@ -130,16 +120,16 @@ export const registerUser = async ({
       error: "Something went wrong",
     };
   }
-};
+}
 
 type SignOutUserReturn = {
   done: boolean;
 } & Error;
-export const signOutUser = async (
+export async function signOutUser(
   session: Session
-): Promise<SignOutUserReturn> => {
+): Promise<SignOutUserReturn> {
   try {
-    const { error } = await supabase.auth.api.signOut(
+    const { error } = await supabaseAdmin.auth.api.signOut(
       session.get("access_token")
     );
     if (error) {
@@ -152,32 +142,16 @@ export const signOutUser = async (
       error: "Something went wrong",
     };
   }
-};
-
-export const doesUserExistByEmail = async (email: string): Promise<boolean> => {
-  try {
-    const { data: profile, error } = await supabase
-      .from<User>("users")
-      .select("user_id")
-      .eq("email", email)
-      .single();
-
-    if (error || !profile) return false;
-
-    return true;
-  } catch {
-    return false;
-  }
-};
+}
 
 type GetUserReturn = {
   user?: User;
 } & Error;
-export const getUserByAccessToken = async (
+export async function getUserByAccessToken(
   accessToken: string
-): Promise<GetUserReturn> => {
+): Promise<GetUserReturn> {
   try {
-    const { user, error } = await supabase.auth.api.getUser(accessToken);
+    const { user, error } = await supabaseAdmin.auth.api.getUser(accessToken);
 
     if (error || !user) {
       return { error: error?.message || "Something went wrong" };
@@ -189,4 +163,4 @@ export const getUserByAccessToken = async (
       error: "Something went wrong",
     };
   }
-};
+}

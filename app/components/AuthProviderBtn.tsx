@@ -1,22 +1,28 @@
 import { useCallback } from 'react';
 
 import { continueWithProvider } from '~/api/supabase-auth.client';
-import type { Providers } from '~/types';
+
+import type { Provider } from '@supabase/supabase-js';
 
 type AuthProviderBtnProps = {
-  provider: Providers;
+  provider: Provider;
+  redirectTo?: string;
 } & React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 >;
-const AuthProviderBtn = ({ provider, ...props }: AuthProviderBtnProps) => {
+export default function AuthProviderBtn({
+  provider,
+  redirectTo,
+  ...props
+}: AuthProviderBtnProps) {
   const handleOnClick = useCallback(async () => {
     try {
-      await continueWithProvider({ provider });
+      await continueWithProvider({ provider, redirectTo });
     } catch (error) {
       console.log(`error in continue with ${provider}`, error);
 
-      // TODO: show error
+      // You should show this error to user
       return;
     }
   }, [provider]);
@@ -26,6 +32,4 @@ const AuthProviderBtn = ({ provider, ...props }: AuthProviderBtnProps) => {
       Continue with {provider}
     </button>
   );
-};
-
-export default AuthProviderBtn;
+}
