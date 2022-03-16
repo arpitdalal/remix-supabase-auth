@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 
+import type { ActionFunction } from 'remix';
 import {
-  ActionFunction,
-  json,
-  LoaderFunction,
   redirect,
   useFetcher,
   useSearchParams,
@@ -16,13 +14,6 @@ import type {
   AuthChangeEvent,
   Session,
 } from '@supabase/supabase-js';
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const cookie = request.headers.get("Cookie");
-  console.log("cookie", cookie);
-
-  return json({});
-};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -72,7 +63,7 @@ export default function authCallback() {
     return () => {
       authListener?.unsubscribe();
     };
-  }, [fetcher]);
+  }, [fetcher, searchParams]);
 
   return null;
 }

@@ -25,7 +25,7 @@ export default function AuthProviderBtn({
       // You should show this error to user
       return;
     }
-  }, [provider]);
+  }, [provider, redirectTo]);
 
   return (
     <button {...props} onClick={handleOnClick}>

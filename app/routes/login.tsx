@@ -55,8 +55,7 @@ export const action: ActionFunction = async ({ request }) => {
     !password ||
     typeof redirectTo !== "string" ||
     typeof email !== "string" ||
-    typeof password !== "string" ||
-    password.length < 8
+    typeof password !== "string"
   ) {
     return json<ActionData>(
       {

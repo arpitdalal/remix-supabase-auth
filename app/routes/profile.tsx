@@ -1,9 +1,11 @@
+import type {
+  LoaderFunction,
+  MetaFunction,
+} from 'remix';
 import {
   Form,
   json,
   Link,
-  LoaderFunction,
-  MetaFunction,
   useCatch,
   useLoaderData,
 } from 'remix';

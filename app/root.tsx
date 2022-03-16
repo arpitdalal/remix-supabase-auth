@@ -1,4 +1,5 @@
 import {
+  json,
   Link,
   Links,
   LiveReload,
@@ -20,22 +21,22 @@ export const meta: MetaFunction = () => {
   };
 };
 
-export type RootLoaderData = {
+type LoaderData = {
   ENV: {
     SUPABASE_URL: string;
     SUPABASE_ANON_KEY: string;
   };
 };
-export const loader: LoaderFunction = async (): Promise<RootLoaderData> => {
-  return {
+export const loader: LoaderFunction = () => {
+  return json<LoaderData>({
     ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     },
-  };
+  });
 };
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ padding: "0 20px" }}>
       <div
@@ -89,10 +90,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </div>
     </div>
   );
-};
+}
 
-const App = () => {
-  const loaderData = useLoaderData<RootLoaderData>();
+export default function App() {
+  const loaderData = useLoaderData<LoaderData>();
 
   return (
     <html lang="en">
@@ -117,7 +118,7 @@ const App = () => {
       </body>
     </html>
   );
-};
+}
 
 export function CatchBoundary() {
   const caught = useCatch();
@@ -161,7 +162,7 @@ export function CatchBoundary() {
   );
 }
 
-export const ErrorBoundary = ({ error }: { error: Error }) => {
+export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Layout>
       <div>
@@ -172,6 +173,4 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
       </div>
     </Layout>
   );
-};
-
-export default App;
+}

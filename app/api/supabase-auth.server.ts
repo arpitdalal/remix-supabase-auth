@@ -1,6 +1,6 @@
 import type { Session } from 'remix';
 import { supabaseAdmin } from '~/services/supabase.server';
-import { Error } from '~/types';
+import type { Error } from '~/types';
 
 import type { User } from '@supabase/supabase-js';
 
@@ -25,7 +25,7 @@ export function setAuthSession(
   return session;
 }
 
-export function hasAuthSession(session: Session): boolean {
+function hasAuthSession(session: Session): boolean {
   try {
     return session.has("access_token");
   } catch {

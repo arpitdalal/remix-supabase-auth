@@ -111,7 +111,7 @@ export default function Register() {
         </fieldset>
       </Form>
       <p>
-        Have an account?<Link to="/login">Login</Link> instead
+        Have an account? <Link to="/login">Login</Link> instead
       </p>
       {actionData?.formError ? (
         <p style={{ color: "red" }}>{actionData.formError}</p>
@@ -120,7 +120,7 @@ export default function Register() {
         <p style={{ color: "green" }}>
           We have sent you an email.
           <br />
-          please confirm you email to complete registration.
+          Please confirm your email to complete registration.
         </p>
       ) : null}
     </div>
