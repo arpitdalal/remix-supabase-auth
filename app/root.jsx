@@ -8,26 +8,27 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
-} from 'remix';
+  json,
+} from "remix";
 
-export const meta = () => {
+export function meta() {
   return {
     title: "Supabase x Remix",
     description:
       "Bare minimum and un-opinionated example using Remix to implement Supabase's email/password and social auth",
   };
-};
+}
 
-export const loader = async () => {
-  return {
+export async function loader() {
+  return json({
     ENV: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
     },
-  };
-};
+  });
+}
 
-const Layout = ({ children }) => {
+function Layout({ children }) {
   return (
     <div style={{ padding: "0 20px" }}>
       <div
@@ -42,16 +43,16 @@ const Layout = ({ children }) => {
         <header>
           <ul style={{ display: "flex", listStyleType: "none", padding: 0 }}>
             <li style={{ margin: 4 }}>
-              <Link to="/">Home</Link>
+              <Link to='/'>Home</Link>
             </li>
             <li style={{ margin: 4 }}>
-              <Link to="/login">Login</Link>
+              <Link to='/login'>Login</Link>
             </li>
             <li style={{ margin: 4 }}>
-              <Link to="/register">Register</Link>
+              <Link to='/register'>Register</Link>
             </li>
             <li style={{ margin: 4 }}>
-              <Link to="/profile">Profile</Link>
+              <Link to='/profile'>Profile</Link>
             </li>
           </ul>
         </header>
@@ -60,18 +61,18 @@ const Layout = ({ children }) => {
           <ul style={{ display: "flex", listStyleType: "none", padding: 0 }}>
             <li style={{ margin: 4 }}>
               <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://github.com/arpitdalal/remix-supabase-auth"
+                target='_blank'
+                rel='noopener noreferrer'
+                href='https://github.com/arpitdalal/remix-supabase-auth'
               >
                 Github
               </a>
             </li>
             <li style={{ margin: 4 }}>
               <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://twitter.com/_arpit_dalal_"
+                target='_blank'
+                rel='noopener noreferrer'
+                href='https://twitter.com/_arpit_dalal_'
               >
                 Twitter
               </a>
@@ -81,16 +82,16 @@ const Layout = ({ children }) => {
       </div>
     </div>
   );
-};
+}
 
-const App = () => {
+export default function App() {
   const loaderData = useLoaderData();
 
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='width=device-width,initial-scale=1' />
         <Meta />
         <Links />
       </head>
@@ -109,7 +110,7 @@ const App = () => {
       </body>
     </html>
   );
-};
+}
 
 export function CatchBoundary() {
   const caught = useCatch();
@@ -121,7 +122,7 @@ export function CatchBoundary() {
           <div style={{ textAlign: "center" }}>
             <h1>Not Found</h1>
             <h2>Looks like the page you are looking for doesn't exist!</h2>
-            <Link to="/">Home page</Link>
+            <Link to='/'>Home page</Link>
           </div>
         </Layout>
       );
@@ -132,7 +133,7 @@ export function CatchBoundary() {
           <div>
             <h1>You are not logged in</h1>
             <p>
-              Please <Link to="/login">Login</Link>
+              Please <Link to='/login'>Login</Link>
             </p>
           </div>
         </Layout>
@@ -153,7 +154,7 @@ export function CatchBoundary() {
   );
 }
 
-export const ErrorBoundary = ({ error }) => {
+export function ErrorBoundary({ error }) {
   return (
     <Layout>
       <div>
@@ -164,6 +165,4 @@ export const ErrorBoundary = ({ error }) => {
       </div>
     </Layout>
   );
-};
-
-export default App;
+}

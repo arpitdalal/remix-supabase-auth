@@ -14,7 +14,7 @@ export function setAuthSession(session,
   return session;
 }
 
-export async function hasAuthSession(session) {
+function hasAuthSession(session) {
   try {
     return session.has("access_token");
   } catch {
@@ -24,7 +24,7 @@ export async function hasAuthSession(session) {
 
 export async function hasActiveAuthSession(session) {
   try {
-    if (!(await hasAuthSession(session)))
+    if (!(hasAuthSession(session)))
       return false;
 
     const { user, error } = await getUserByAccessToken(

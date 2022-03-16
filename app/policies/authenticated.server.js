@@ -1,11 +1,11 @@
-import { redirect } from 'remix';
+import { redirect } from "remix";
 import {
   getUserByAccessToken,
   hasActiveAuthSession,
   refreshUserToken,
   setAuthSession,
-} from '~/api/supabase-auth.server';
-import { authCookie } from '~/services/supabase.server';
+} from "~/api/supabase-auth.server";
+import { authCookie } from "~/services/supabase.server";
 
 export default async function authenticated(
   request,
@@ -27,7 +27,7 @@ export default async function authenticated(
       if (error || !accessToken || !refreshToken) {
         throw new Error("refreshUserToken " + error);
       }
-      session = setAuthSession(request, accessToken, refreshToken);
+      session = setAuthSession(session, accessToken, refreshToken);
       return redirect(redirectUrl, {
         headers: {
           "Set-Cookie": await authCookie.commitSession(session),
@@ -35,12 +35,12 @@ export default async function authenticated(
       });
     }
 
-    const { user, error: sessionErr } = await getUserByAccessToken(
+    const { user, error: accessTokenError } = await getUserByAccessToken(
       session.get("access_token")
     );
 
-    if (sessionErr || !user || !user.email || !user.id) {
-      throw new Error("getUserByAccessToken " + error);
+    if (accessTokenError || !user || !user.email || !user.id) {
+      throw new Error("getUserByAccessToken " + accessTokenError);
     }
 
     return await successFunction(user);
