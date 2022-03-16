@@ -1,57 +1,47 @@
-import supabase, { getSession } from '~/services/supabase.server';
+import { supabaseAdmin } from '~/services/supabase.server';
 
-export const setSBAuth = async (request) => {
-  const session = await getSession(request.headers.get("Cookie"));
+export async function setSBAuth(session) {
   const userAccessToken = session.get("access_token");
-  supabase.auth.setAuth(userAccessToken);
-};
+  supabaseAdmin.auth.setAuth(userAccessToken);
+}
 
-export const setAuthSession = async (
-  request,
+export function setAuthSession(session,
   accessToken,
-  refreshToken
-) => {
-  const session = await getSession(request.headers.get("Cookie"));
+  refreshToken) {
   session.set("access_token", accessToken);
   session.set("refresh_token", refreshToken);
 
   return session;
-};
+}
 
-export const hasAuthSession = async (request) => {
+export async function hasAuthSession(session) {
   try {
-    const session = await getSession(request.headers.get("Cookie"));
     return session.has("access_token");
   } catch {
     return false;
   }
-};
+}
 
-export const hasActiveAuthSession = async (
-  request
-)=> {
+export async function hasActiveAuthSession(session) {
   try {
-    if (!(await hasAuthSession(request))) return false;
+    if (!(await hasAuthSession(session)))
+      return false;
 
-    const session = await getSession(request.headers.get("Cookie"));
     const { user, error } = await getUserByAccessToken(
       session.get("access_token")
     );
 
-    if (error || !user) return false;
+    if (error || !user)
+      return false;
     return true;
   } catch {
     return false;
   }
-};
+}
 
-export const refreshUserToken = async (
-  request
-) => {
+export async function refreshUserToken(session) {
   try {
-    const session = await getSession(request.headers.get("Cookie"));
-
-    const { data, error } = await supabase.auth.api.refreshAccessToken(
+    const { data, error } = await supabaseAdmin.auth.api.refreshAccessToken(
       session.get("refresh_token")
     );
 
@@ -66,22 +56,18 @@ export const refreshUserToken = async (
   } catch {
     return { error: "Something went wrong" };
   }
-};
+}
 
-export const loginUser = async ({
-  email,
-  password,
-}) => {
+export async function loginUser({
+  email, password,
+}) {
   try {
-    const { data: sessionData, error: loginError } =
-      await supabase.auth.api.signInWithEmail(email, password);
+    const { data: sessionData, error: loginError } = await supabaseAdmin.auth.api.signInWithEmail(email, password);
 
-    if (
-      loginError ||
+    if (loginError ||
       !sessionData ||
       !sessionData.access_token ||
-      !sessionData.refresh_token
-    ) {
+      !sessionData.refresh_token) {
       return { error: loginError?.message || "Something went wrong" };
     }
 
@@ -92,14 +78,13 @@ export const loginUser = async ({
   } catch {
     return { error: "Something went wrong" };
   }
-};
+}
 
-export const registerUser = async ({
-  email,
-  password,
-}) => {
+export async function registerUser({
+  email, password,
+}) {
   try {
-    const { user, error: signUpError } = await supabase.auth.signUp({
+    const { user, error: signUpError } = await supabaseAdmin.auth.signUp({
       email,
       password,
     });
@@ -114,13 +99,11 @@ export const registerUser = async ({
       error: "Something went wrong",
     };
   }
-};
+}
 
-export const signOutUser = async (
-  session
-) => {
+export async function signOutUser(session) {
   try {
-    const { error } = await supabase.auth.api.signOut(
+    const { error } = await supabaseAdmin.auth.api.signOut(
       session.get("access_token")
     );
     if (error) {
@@ -133,29 +116,11 @@ export const signOutUser = async (
       error: "Something went wrong",
     };
   }
-};
+}
 
-export const doesUserExistByEmail = async (email) => {
+export async function getUserByAccessToken(accessToken) {
   try {
-    const { data: profile, error } = await supabase
-      .from<User>("users")
-      .select("user_id")
-      .eq("email", email)
-      .single();
-
-    if (error || !profile) return false;
-
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-export const getUserByAccessToken = async (
-  accessToken
-) => {
-  try {
-    const { user, error } = await supabase.auth.api.getUser(accessToken);
+    const { user, error } = await supabaseAdmin.auth.api.getUser(accessToken);
 
     if (error || !user) {
       return { error: error?.message || "Something went wrong" };
@@ -167,4 +132,4 @@ export const getUserByAccessToken = async (
       error: "Something went wrong",
     };
   }
-};
+}

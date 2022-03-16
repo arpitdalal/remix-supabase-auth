@@ -4,56 +4,46 @@ import {
   Link,
   redirect,
   useActionData,
-  useSearchParams,
 } from 'remix';
-import {
-  doesUserExistByEmail,
-  hasActiveAuthSession,
-  registerUser,
-} from '~/api/supabase-auth.server';
+import { registerUser } from '~/api/supabase-auth.server';
 import AuthProviderBtn from '~/components/AuthProviderBtn';
+import authenticated from '~/policies/authenticated.server';
 
-export const meta = () => {
+export function meta() {
   return { title: "Supabase x Remix | Register" };
-};
+}
 
-export const loader = async ({ request }) => {
-  if (await hasActiveAuthSession(request)) {
-    return redirect("/profile");
-  }
-  return {};
-};
+export async function loader({ request }) {
+  return authenticated(
+    request,
+    () => {
+      return redirect("/profile");
+    },
+    () => {
+      return json({});
+    }
+  );
+}
 
-export const action = async ({
+export async function action({
   request,
-}) => {
+}) {
   const form = await request.formData();
   const email = form.get("email");
   const password = form.get("password");
-  const redirectTo = form.get("redirectTo") || "/";
-  if (
-    !email ||
+  if (!email ||
     !password ||
-    typeof redirectTo !== "string" ||
     typeof email !== "string" ||
     typeof password !== "string" ||
-    password.length < 8
-  ) {
-    return json<ActionData>(
+    password.length < 8) {
+    return json(
       {
         formError: `Form not submitted correctly.`,
         fields: {
           email: String(email) ?? "",
         },
       },
-      400
-    );
-  }
-
-  if (await doesUserExistByEmail(email)) {
-    return json<ActionData>(
-      { formError: "Something went wrong", fields: { email } },
-      400
+      403
     );
   }
 
@@ -62,18 +52,17 @@ export const action = async ({
     password,
   });
   if (error || !user) {
-    return json<ActionData>(
+    return json(
       { formError: error || "Something went wrong", fields: { email } },
-      400
+      401
     );
   }
 
-  return json<ActionData>({ result: "success" }, { status: 201 });
-};
+  return json({ result: "success" }, { status: 201 });
+}
 
-const Register = () => {
+export default function Register() {
   const actionData = useActionData();
-  const [searchParams] = useSearchParams();
 
   return (
     <div>
@@ -86,11 +75,6 @@ const Register = () => {
       </div>
       <p>Or continue with email/password</p>
       <Form replace method="post">
-        <input
-          type="hidden"
-          name="redirectTo"
-          value={searchParams.get("redirectTo") ?? undefined}
-        />
         <fieldset>
           <legend>Register</legend>
           <div style={{ margin: 5 }}>
@@ -99,8 +83,7 @@ const Register = () => {
               <input
                 type="email"
                 name="email"
-                defaultValue={actionData?.fields?.email}
-              />
+                defaultValue={actionData?.fields?.email} />
             </label>
           </div>
           <div style={{ margin: 5 }}>
@@ -121,11 +104,11 @@ const Register = () => {
       ) : null}
       {actionData?.result ? (
         <p style={{ color: "green" }}>
-          We have sent you an email, please confirm to register.
+          We have sent you an email.
+          <br />
+          Please confirm you email to complete registration.
         </p>
       ) : null}
     </div>
   );
-};
-
-export default Register;
+}

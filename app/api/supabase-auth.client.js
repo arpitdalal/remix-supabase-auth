@@ -1,15 +1,17 @@
-import supabase from '~/services/supabase.client';
+import { supabaseClient } from '~/services/supabase.client';
 
 export const continueWithProvider = async ({
   provider,
-  redirectTo = `${window.location.origin}/profile`,
+  redirectTo = "/profile",
 }) => {
-  return await supabase.auth.signIn(
+  const redirectUrl = `${window.location.origin}/api/auth/callback?redirectTo=${redirectTo}`;
+
+  return await supabaseClient.auth.signIn(
     {
       provider,
     },
     {
-      redirectTo: redirectTo,
+      redirectTo: redirectUrl,
     }
   );
 };

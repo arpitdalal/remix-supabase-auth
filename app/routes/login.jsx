@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import {
   Form,
   json,
@@ -7,45 +9,50 @@ import {
   useSearchParams,
 } from 'remix';
 import {
-  hasActiveAuthSession,
   loginUser,
   setAuthSession,
 } from '~/api/supabase-auth.server';
 import AuthProviderBtn from '~/components/AuthProviderBtn';
-import { commitSession } from '~/services/supabase.server';
+import authenticated from '~/policies/authenticated.server';
+import { authCookie } from '~/services/supabase.server';
 
-export const meta = () => {
+export function meta() {
   return { title: "Supabase x Remix | Login" };
-};
+}
 
-export const loader = async ({ request }) => {
-  if (await hasActiveAuthSession(request)) {
-    return redirect("/profile");
-  }
-  return {};
-};
+export async function loader({ request }) {
+  return authenticated(
+    request,
+    () => {
+      return redirect("/profile");
+    },
+    () => {
+      return json({});
+    }
+  );
+}
 
-export const action = async ({ request }) => {
+export async function action({ request }) {
+  let session = await authCookie.getSession(request.headers.get("Cookie"));
+
   const form = await request.formData();
+
   const email = form.get("email");
   const password = form.get("password");
   const redirectTo = form.get("redirectTo") || "/profile";
-  if (
-    !email ||
+  if (!email ||
     !password ||
     typeof redirectTo !== "string" ||
     typeof email !== "string" ||
-    typeof password !== "string" ||
-    password.length < 8
-  ) {
-    return json<ActionData>(
+    typeof password !== "string") {
+    return json(
       {
         formError: `Form not submitted correctly.`,
         fields: {
           email: String(email) ?? "",
         },
       },
-      400
+      403
     );
   }
 
@@ -54,39 +61,44 @@ export const action = async ({ request }) => {
     password,
   });
   if (error || !accessToken || !refreshToken) {
-    return json<ActionData>(
+    return json(
       { formError: error || "Something went wrong", fields: { email } },
-      400
+      403
     );
   }
 
-  const session = await setAuthSession(request, accessToken, refreshToken);
+  session = await setAuthSession(session, accessToken, refreshToken);
   return redirect(redirectTo, {
     headers: {
-      "Set-Cookie": await commitSession(session),
+      "Set-Cookie": await authCookie.commitSession(session),
     },
   });
-};
+}
 
-const Login = () => {
+export default function Login () {
   const actionData = useActionData();
   const [searchParams] = useSearchParams();
+
+  const redirectTo = useMemo(
+    () => searchParams.get("redirectTo") ?? "/profile",
+    [searchParams]
+  );
 
   return (
     <div>
       <h1>Login</h1>
       <div style={{ margin: 5 }}>
-        <AuthProviderBtn provider="google" />
+        <AuthProviderBtn provider="google" redirectTo={redirectTo} />
       </div>
       <div style={{ margin: 5 }}>
-        <AuthProviderBtn provider="facebook" />
+        <AuthProviderBtn provider="facebook" redirectTo={redirectTo} />
       </div>
       <p>Or continue with email/password</p>
       <Form replace method="post">
         <input
           type="hidden"
           name="redirectTo"
-          value={searchParams.get("redirectTo") ?? undefined}
+          value={redirectTo}
         />
         <fieldset>
           <legend>Login</legend>
@@ -119,5 +131,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;

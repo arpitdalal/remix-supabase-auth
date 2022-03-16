@@ -23,9 +23,9 @@ const supabaseOptions = {
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey, supabaseOptions);
+export const supabaseAdmin = createClient(supabaseUrl, supabaseKey, supabaseOptions);
 
-const { getSession, commitSession, destroySession } =
+export const authCookie =
   createCookieSessionStorage({
     cookie: {
       name: "sb:token",
@@ -38,6 +38,3 @@ const { getSession, commitSession, destroySession } =
       secure: process.env.NODE_ENV === "production",
     },
   });
-
-export default supabase;
-export { commitSession, destroySession, getSession };

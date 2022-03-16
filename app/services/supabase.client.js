@@ -1,4 +1,5 @@
 import { name as appName } from 'package.json';
+
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseOptions = {
@@ -12,6 +13,4 @@ const customWindow = window;
 const supabaseUrl = customWindow.ENV.SUPABASE_URL;
 const supabaseKey = customWindow.ENV.SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey, supabaseOptions);
-
-export default supabase;
+export const supabaseClient = createClient(supabaseUrl, supabaseKey, supabaseOptions);
