@@ -5,9 +5,10 @@ Bare minimum and un-opinionated example using Remix to implement Supabase's emai
 ## Features
 
 - Signin and Register using Supabase's email/password, Google, and Facebook auth
+- Integration for all oAuth providers that Supabase supports
+- Easily enable any oAuth provider - see [extend section](https://github.com/arpitdalal/remix-supabase-auth/tree/js#extend-implementation)
 - Persist user with HTTP cookie
 - Refresh token logic implemented
-- Can easily extend the social auth providers
 - Bare minimum and un-opinionated
 - `js` branch is JavaScript but you can access Typescript project in [`main` branch](https://github.com/arpitdalal/remix-supabase-auth/)
 
@@ -31,9 +32,20 @@ Bare minimum and un-opinionated example using Remix to implement Supabase's emai
 
 [Login](./app/routes/login.jsx) - Login using email/password or continue with Google/Facebook social authentications. When logging in using a Google/Facebook account that is not registered in Supabase, Supabase will create a new account with that email
 
+[Auth Callback](./app/routes/api/auth.callback.jsx) - Handles the callback from Supabase when oAuth providers are used to login or register. This route uses `supabase.auth.onAuthStateChange` to get the access and refresh tokens from the url and then it submits the `FormData` to create session on the server
+
 [Profile](./app/routes/profile.jsx) - Only accessible when logged in, otherwise throws an error which is caught by Remix's `CatchBoundary` and asks user to login. Once logged in, it'll show the `User` object that is returned from Supabase
 
 [Logout](./app/routes/api/logout.js) - Logs user out of the local session and Supabase session. It is an api/resource route because it doesn't export a JSX element
+
+## Extend Implementation
+
+<details>
+<summary>Add other oAuth providers</summary>
+
+- Simply add the `client ID` and `secret` to Supabase for the provider that you want to support.
+- In `login.jsx` and `register.jsx` add the `<AuthProviderBtn provider={YourProvider} redirectTo={redirectTo} />` and that's it!
+</details>
 
 ## Questions?
 
