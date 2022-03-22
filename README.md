@@ -53,4 +53,4 @@ Please feel free to hit me up on [Twitter](https://twitter.com/_arpit_dalal_) or
 
 ## License
 
-MIT
+© 2022 Arpit Dalal. Released under [MIT license](./LICENSE.md)
