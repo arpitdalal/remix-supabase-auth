@@ -1,11 +1,12 @@
+import authenticated from '~/policies/authenticated.server';
+
+import { json } from '@remix-run/node';
 import {
   Form,
-  json,
   Link,
   useCatch,
   useLoaderData,
-} from 'remix';
-import authenticated from '~/policies/authenticated.server';
+} from '@remix-run/react';
 
 export function meta() {
   return { title: "Supabase x Remix | Profile" };

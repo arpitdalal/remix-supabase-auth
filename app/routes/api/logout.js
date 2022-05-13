@@ -1,6 +1,7 @@
-import { redirect } from 'remix';
 import { signOutUser } from '~/api/supabase-auth.server';
 import { authCookie } from '~/services/supabase.server';
+
+import { redirect } from '@remix-run/node';
 
 export function loader() {
   return redirect("/");

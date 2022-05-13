@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
-import {
-  redirect,
-  useFetcher,
-  useSearchParams,
-} from 'remix';
 import { setAuthSession } from '~/api/supabase-auth.server';
 import { supabaseClient } from '~/services/supabase.client';
 import { authCookie } from '~/services/supabase.server';
+
+import { redirect } from '@remix-run/node';
+import {
+  useFetcher,
+  useSearchParams,
+} from '@remix-run/react';
 
 export async function action({ request }) {
   const formData = await request.formData();

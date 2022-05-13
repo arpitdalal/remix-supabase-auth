@@ -1,5 +1,4 @@
-import { createCookieSessionStorage } from 'remix';
-
+import { createCookieSessionStorage } from '@remix-run/node';
 import { createClient } from '@supabase/supabase-js';
 
 import { name as appName } from '../../package.json';
