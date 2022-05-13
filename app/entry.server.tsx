@@ -1,6 +1,7 @@
 import { renderToString } from 'react-dom/server';
-import type { EntryContext } from 'remix';
-import { RemixServer } from 'remix';
+
+import type { EntryContext } from '@remix-run/node';
+import { RemixServer } from '@remix-run/react';
 
 declare global {
   namespace NodeJS {

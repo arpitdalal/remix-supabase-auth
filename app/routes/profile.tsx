@@ -1,16 +1,16 @@
+import authenticated from '~/policies/authenticated.server';
+
 import type {
   LoaderFunction,
   MetaFunction,
-} from 'remix';
+} from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Form,
-  json,
   Link,
   useCatch,
   useLoaderData,
-} from 'remix';
-import authenticated from '~/policies/authenticated.server';
-
+} from '@remix-run/react';
 import type { User } from '@supabase/supabase-js';
 
 export const meta: MetaFunction = () => {

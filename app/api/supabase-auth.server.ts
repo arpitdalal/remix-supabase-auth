@@ -1,7 +1,7 @@
-import type { Session } from 'remix';
 import { supabaseAdmin } from '~/services/supabase.server';
 import type { Error } from '~/types';
 
+import type { Session } from '@remix-run/node';
 import type { User } from '@supabase/supabase-js';
 
 type AuthForm = {

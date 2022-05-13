@@ -1,4 +1,3 @@
-import { redirect } from 'remix';
 import {
   getUserByAccessToken,
   hasActiveAuthSession,
@@ -7,6 +6,7 @@ import {
 } from '~/api/supabase-auth.server';
 import { authCookie } from '~/services/supabase.server';
 
+import { redirect } from '@remix-run/node';
 import type { User } from '@supabase/supabase-js';
 
 export default async function authenticated(

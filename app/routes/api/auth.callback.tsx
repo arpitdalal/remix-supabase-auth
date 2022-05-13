@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 
-import type { ActionFunction } from 'remix';
-import {
-  redirect,
-  useFetcher,
-  useSearchParams,
-} from 'remix';
 import { setAuthSession } from '~/api/supabase-auth.server';
 import { supabaseClient } from '~/services/supabase.client';
 import { authCookie } from '~/services/supabase.server';
 
+import type { ActionFunction } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import {
+  useFetcher,
+  useSearchParams,
+} from '@remix-run/react';
 import type {
   AuthChangeEvent,
   Session,

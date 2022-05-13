@@ -1,5 +1,4 @@
-import { createCookieSessionStorage } from 'remix';
-
+import { createCookieSessionStorage } from '@remix-run/node';
 import type { SupabaseClientOptions } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 

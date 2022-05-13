@@ -1,18 +1,21 @@
+import { registerUser } from '~/api/supabase-auth.server';
+import AuthProviderBtn from '~/components/AuthProviderBtn';
+import authenticated from '~/policies/authenticated.server';
+
 import type {
   ActionFunction,
   LoaderFunction,
   MetaFunction,
-} from 'remix';
+} from '@remix-run/node';
+import {
+  json,
+  redirect,
+} from '@remix-run/node';
 import {
   Form,
-  json,
   Link,
-  redirect,
   useActionData,
-} from 'remix';
-import { registerUser } from '~/api/supabase-auth.server';
-import AuthProviderBtn from '~/components/AuthProviderBtn';
-import authenticated from '~/policies/authenticated.server';
+} from '@remix-run/react';
 
 export const meta: MetaFunction = () => {
   return { title: "Supabase x Remix | Register" };

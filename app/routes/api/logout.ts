@@ -1,10 +1,11 @@
+import { signOutUser } from '~/api/supabase-auth.server';
+import { authCookie } from '~/services/supabase.server';
+
 import type {
   ActionFunction,
   LoaderFunction,
-} from 'remix';
-import { redirect } from 'remix';
-import { signOutUser } from '~/api/supabase-auth.server';
-import { authCookie } from '~/services/supabase.server';
+} from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 
 export const loader: LoaderFunction = () => {
   return redirect("/");

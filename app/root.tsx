@@ -1,17 +1,19 @@
+import type {
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
-  json,
   Link,
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
-  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
   useLoaderData,
-} from 'remix';
+} from '@remix-run/react';
 
 export const meta: MetaFunction = () => {
   return {
