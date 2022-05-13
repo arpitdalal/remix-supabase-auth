@@ -20,11 +20,11 @@ Bare minimum and un-opinionated example using Remix to implement Supabase's emai
   - Visit API settings page of your project by either going to `https://app.supabase.io/project/<your-project-id>/settings/api` or clicking on the `Settings` on the left sidebar > click on `API` under `Project settings`. You'll find your `anon_key` and `URL` on that page, which will be used in the next step.
 - Clone this example and rename/copy `.env.example` to `.env` and add `SUPABASE_ANON_KEY`, and `SUPABASE_URL`
 - Add your Google and Facebook `client ID` and `secret` to your Supabase project, follow the steps mentioned in the Supabase's documentation for [Google](https://supabase.com/docs/guides/auth/auth-google) and [Facebook](https://supabase.com/docs/guides/auth/auth-facebook)
-- Install npm dependencies by running `npm i`/`npm install` or `yarn`
+- Install npm dependencies by running `npm i`/`npm install`
 
 ## Development
 
-- run the development server with `npm run dev` or `yarn dev`
+- run the development server with `npm run dev`
 
 ## What you'll get?
 
