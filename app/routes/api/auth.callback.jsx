@@ -31,6 +31,12 @@ export async function action({ request }) {
         "Set-Cookie": await authCookie.commitSession(session),
       },
     });
+  } else if (event === "PASSWORD_RECOVERY") {
+    return redirect("/change-password", {
+      headers: {
+        "Set-Cookie": await authCookie.commitSession(session),
+      },
+    });
   }
   redirect("/login");
 }

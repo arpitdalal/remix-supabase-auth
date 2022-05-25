@@ -133,3 +133,50 @@ export async function getUserByAccessToken(accessToken) {
     };
   }
 }
+
+export async function sendResetPasswordEmailForUser({
+  email,
+  redirectTo,
+}) {
+  try {
+    const { data, error } = await supabaseAdmin.auth.api.resetPasswordForEmail(
+      email,
+      {
+        redirectTo,
+      },
+    );
+
+    if (error || data === null) {
+      return { error: error?.message || "Something went wrong" };
+    }
+    return {};
+  } catch (error) {
+    return {
+      error: "Something went wrong",
+    };
+  }
+}
+
+export async function resetPasswordForUser({
+  password,
+  session,
+}) {
+  try {
+    const { user, error } = await supabaseAdmin.auth.api.updateUser(
+      session.get("access_token"),
+      {
+        password
+      }
+    );
+
+    if (error || !user) {
+      return { error: error?.message || "Something went wrong" };
+    }
+
+    return { user };
+  } catch {
+    return {
+      error: "Something went wrong",
+    };
+  }
+}

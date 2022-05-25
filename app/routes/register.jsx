@@ -1,7 +1,16 @@
-import { Form, json, Link, redirect, useActionData } from "remix";
-import { registerUser } from "~/api/supabase-auth.server";
-import AuthProviderBtn from "~/components/AuthProviderBtn";
-import authenticated from "~/policies/authenticated.server";
+import { registerUser } from '~/api/supabase-auth.server';
+import AuthProviderBtn from '~/components/AuthProviderBtn';
+import authenticated from '~/policies/authenticated.server';
+
+import {
+  json,
+  redirect,
+} from '@remix-run/node';
+import {
+  Form,
+  Link,
+  useActionData,
+} from '@remix-run/react';
 
 export function meta() {
   return { title: "Supabase x Remix | Register" };
@@ -78,12 +87,13 @@ export default function Register() {
                 type='email'
                 name='email'
                 defaultValue={actionData?.fields?.email}
+                required
               />
             </label>
           </div>
           <div style={{ margin: 5 }}>
             <label>
-              Password <input type='password' name='password' />
+              Password <input type='password' minLength={8} name='password' required />
             </label>
           </div>
           <div style={{ margin: 5 }}>

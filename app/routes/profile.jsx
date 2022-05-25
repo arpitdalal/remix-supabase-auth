@@ -30,6 +30,7 @@ export default function Profile() {
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Hello {user.email}!</h1>
+      <Link to="/change-password">Change password</Link>
       <pre style={{ textAlign: "left" }}>
         <code>{JSON.stringify(user, null, 2)}</code>
       </pre>

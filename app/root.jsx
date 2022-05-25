@@ -1,3 +1,4 @@
+import { json } from '@remix-run/node';
 import {
   Link,
   Links,
@@ -8,8 +9,7 @@ import {
   ScrollRestoration,
   useCatch,
   useLoaderData,
-  json,
-} from "remix";
+} from '@remix-run/react';
 
 export function meta() {
   return {
