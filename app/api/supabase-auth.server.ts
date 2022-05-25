@@ -164,3 +164,61 @@ export async function getUserByAccessToken(
     };
   }
 }
+
+type SendResetPasswordEmailForUserArgs = {
+  email: string;
+  redirectTo: string;
+};
+export async function sendResetPasswordEmailForUser({
+  email,
+  redirectTo,
+}: SendResetPasswordEmailForUserArgs): Promise<Error> {
+  try {
+    const { data, error } = await supabaseAdmin.auth.api.resetPasswordForEmail(
+      email,
+      {
+        redirectTo,
+      },
+    );
+
+    if (error || data === null) {
+      return { error: error?.message || "Something went wrong" };
+    }
+    return {};
+  } catch (error) {
+    return {
+      error: "Something went wrong",
+    };
+  }
+}
+
+type ResetPasswordForUserArgs = {
+  password: string;
+  session: Session;
+};
+type ResetPasswordReturn = {
+  user?: User;
+} & Error;
+export async function resetPasswordForUser({
+  password,
+  session,
+}: ResetPasswordForUserArgs): Promise<ResetPasswordReturn> {
+  try {
+    const { user, error } = await supabaseAdmin.auth.api.updateUser(
+      session.get("access_token"),
+      {
+        password
+      }
+    );
+
+    if (error || !user) {
+      return { error: error?.message || "Something went wrong" };
+    }
+
+    return { user };
+  } catch {
+    return {
+      error: "Something went wrong",
+    };
+  }
+}

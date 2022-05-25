@@ -100,12 +100,13 @@ export default function Register() {
                 type="email"
                 name="email"
                 defaultValue={actionData?.fields?.email}
+                required
               />
             </label>
           </div>
           <div style={{ margin: 5 }}>
             <label>
-              Password <input type="password" name="password" />
+              Password <input type="password" minLength={8} name="password" required />
             </label>
           </div>
           <div style={{ margin: 5 }}>

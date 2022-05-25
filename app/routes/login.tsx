@@ -120,13 +120,17 @@ export default function Login() {
                 type="email"
                 name="email"
                 defaultValue={actionData?.fields?.email}
+                required
               />
             </label>
           </div>
           <div style={{ margin: 5 }}>
             <label>
-              Password <input type="password" min={8} name="password" />
+              Password <input type="password" minLength={8} name="password" required />
             </label>
+          </div>
+          <div style={{ margin: 5 }}>
+            <Link to={`/forgot-password?redirectTo=${redirectTo}`}>Forgot password?</Link>
           </div>
           <div style={{ margin: 5 }}>
             <button type="submit">Login</button>
