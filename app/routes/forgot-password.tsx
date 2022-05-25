@@ -1,9 +1,16 @@
 import { useMemo } from 'react';
 
 import { sendResetPasswordEmailForUser } from '~/api/supabase-auth.server';
+import authenticated from '~/policies/authenticated.server';
 
-import type { ActionFunction } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import type {
+  ActionFunction,
+  LoaderFunction,
+} from '@remix-run/node';
+import {
+  json,
+  redirect,
+} from '@remix-run/node';
 import {
   Form,
   Link,
@@ -11,12 +18,25 @@ import {
   useSearchParams,
 } from '@remix-run/react';
 
+export const loader: LoaderFunction = async ({ request }) => {
+  return authenticated(
+    request,
+    () => {
+      return redirect("/profile");
+    },
+    () => {
+      return json({});
+    }
+  );
+};
+
 type ActionData = {
   formError?: string;
   fields?: { email: string };
   message?: string;
 };
-export const action: ActionFunction = async ({ request }) => {const form = await request.formData();
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData();
 
   const email = form.get("email");
   const redirectTo = form.get("redirectTo") || "/profile";
