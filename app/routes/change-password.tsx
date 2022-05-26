@@ -5,6 +5,7 @@ import { authCookie } from '~/services/supabase.server';
 import type {
   ActionFunction,
   LoaderFunction,
+  MetaFunction,
 } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
@@ -12,6 +13,10 @@ import {
   Link,
   useActionData,
 } from '@remix-run/react';
+
+export const meta: MetaFunction = () => {
+  return { title: "Supabase x Remix | Change password" };
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   return await authenticated(

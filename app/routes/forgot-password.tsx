@@ -6,6 +6,7 @@ import authenticated from '~/policies/authenticated.server';
 import type {
   ActionFunction,
   LoaderFunction,
+  MetaFunction,
 } from '@remix-run/node';
 import {
   json,
@@ -17,6 +18,10 @@ import {
   useActionData,
   useSearchParams,
 } from '@remix-run/react';
+
+export const meta: MetaFunction = () => {
+  return { title: "Supabase x Remix | Forgot password" };
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   return authenticated(
