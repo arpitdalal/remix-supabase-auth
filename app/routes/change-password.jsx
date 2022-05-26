@@ -9,6 +9,10 @@ import {
   useActionData,
 } from '@remix-run/react';
 
+export const meta = () => {
+  return { title: "Supabase x Remix | Change password" };
+};
+
 export const loader = async ({ request }) => {
   return await authenticated(
     request,

@@ -11,6 +11,10 @@ import {
   useSearchParams,
 } from '@remix-run/react';
 
+export const meta = () => {
+  return { title: "Supabase x Remix | Forgot password" };
+};
+
 export const loader = async ({request}) => {
   return authenticated(
     request,
