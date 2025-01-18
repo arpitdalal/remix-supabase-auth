@@ -1,3 +1,6 @@
+> [!CAUTION]
+> Use [@supabase/ssr](https://www.npmjs.com/package/@supabase/ssr) instead for new remix/react router apps.
+
 # Remix Supabase Auth
 
 Bare minimum and un-opinionated example using Remix to implement Supabase's email/password and oAuth
